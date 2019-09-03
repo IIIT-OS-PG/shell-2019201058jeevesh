@@ -1,6 +1,10 @@
-
-#include"header.h"
-#include<stdio.h>
+#include<iostream>
+#include"cppheader.h"
+#include<cstdio>
+#include<bits/stdc++.h>
+using namespace std;
+#include<string>
+#include<cstring>
 
 
 char *history[500];
@@ -10,10 +14,11 @@ char *history[500];
 
 
 
-void main()
+int  main()
 {
     
     
+  //  string buff;
     char buff[1000];
 char *argv[64];
 int h=0;
@@ -22,20 +27,25 @@ int h=0;
 {  
         
         promptcall();
-       
-       gets(buff);
+        string str;
+        getline(cin,str);
+        int l=str.size();
+        int i;
+        for(i=0;i<l;i++)
+        buff[i]=str[i];
+        buff[i]='\0';
+        
+      //cin.get(buff);
+       //fgets(buff);
      jai(buff, argv);                     
       
      // printf("\t %s jai \t",*argv);
       
       
       
-      char *temp=(char *)calloc(32,sizeof(char));
-      strcpy(temp,buff);
-      history[h]=temp;
-      printf("\n %s",history[h]);
-      printf("\n history demo :buff=%s %d %s %s",buff,h,history[0],history[1]);
-      h++;
+      //printf("\n %s",history[h]);
+      //printf("\n history demo :buff=%s %d %s %s",buff,h,history[0],history[1]);
+      
       
       
       
@@ -57,9 +67,10 @@ int h=0;
      { exit(0); }           
       
       jaiexecute(argv); 
-      free(temp);
+     // free(temp);
 
  
 
 }
+return 0;
 }
