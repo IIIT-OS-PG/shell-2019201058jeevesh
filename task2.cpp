@@ -1,3 +1,9 @@
+// History command implemented:   syntax::  history (without any arguments)s // checked 
+
+
+
+
+
 #include<iostream>
 #include"cppheader.h"
 #include<cstdio>
@@ -5,9 +11,19 @@
 using namespace std;
 #include<string>
 #include<cstring>
+#include<list>
+
+list<string> history;
 
 
-char *history[500];
+void history_call()
+{
+  list<string>:: iterator it;
+  for(it=history.end();it!=history.begin();it--)
+  cout<<*it<<endl;
+  cout<<*it<<endl;
+}
+
 
 
 
@@ -18,7 +34,7 @@ int  main()
 {
     
     
-  //  string buff;
+  history.clear();
     char buff[1000];
 char *argv[64];
 int h=0;
@@ -29,22 +45,21 @@ int h=0;
         promptcall();
         string str;
         getline(cin,str);
+        history.push_back(str);// maintaining list for history
         int l=str.size();
         int i;
         for(i=0;i<l;i++)
         buff[i]=str[i];
         buff[i]='\0';
         
-      //cin.get(buff);
-       //fgets(buff);
-     jai(buff, argv);                     
+        jai(buff, argv);                     
       
-     // printf("\t %s jai \t",*argv);
+     
+     
+     
+     
       
       
-      
-      //printf("\n %s",history[h]);
-      //printf("\n history demo :buff=%s %d %s %s",buff,h,history[0],history[1]);
       
       
       
@@ -55,11 +70,11 @@ int h=0;
 
       //implementing history command
     
-       //  if(strcmp(argv[0], "history")==0)
-       // {printf("history called");
-        // jaihistory(history,h);
-         //continue;
-       //}
+        if(strcmp(argv[0], "history")==0)
+       {
+         history_call();
+         continue;
+       }
       
       
       
@@ -69,8 +84,9 @@ int h=0;
       jaiexecute(argv); 
      // free(temp);
 
- 
+      
 
 }
+
 return 0;
 }
