@@ -75,6 +75,12 @@ int h=0;
          history_call();
          continue;
        }
+
+       if(strcmp(argv[0],"cd")==0)
+       {
+         directory_ch(argv[1]);
+         continue;
+       }
       
       
       

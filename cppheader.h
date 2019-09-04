@@ -22,6 +22,64 @@ char cwd[1000];
 
 
 
+void directory_ch(char *args)
+{
+    char *c="/home";
+   // char *d="/home/jeevseh";
+
+    if(args[0]=='\0')
+    {
+        chdir(c);
+    }
+    else if((strcmp(args,"~")==0)  || (strcmp(args,"~/")==0))
+    {
+        chdir(c);
+    }
+    /*else if(strcmp(args,".."))
+    {
+        char cwda[255];
+        int i=0,j;
+        getcwd(cwda,sizeof(cwda));
+        for(i=1;i<sizeof(cwda);i++)
+        {
+            if(cwda[i]=='/')
+            {
+                cwda[i]='\0';
+                break;
+            }
+        }
+        chdir(cwda);
+
+
+    }
+    else if(strcmp(args,"/"))
+    {
+        char jai[255];
+        jai[0]='\0';
+        chdir(jai);
+
+    }*/
+    else
+    {
+            char path[255];
+            char cwd[255];
+
+            getcwd(cwd,sizeof(cwd));
+            for(int i=0;i<sizeof(cwd);i++)
+                path[i]=cwd[i];
+
+            strcat(path,"/");
+            strcat(path,args);
+           // cout<<path;
+            chdir(path);
+
+    }
+
+}
+
+
+
+
 
 int jai(char * l,char **arg)
 {
@@ -62,6 +120,7 @@ void jaiexecute(char **argv)
         }
     }
     else{
+       
         while(wait(&status)!=pid);
     }
 }
