@@ -16,6 +16,20 @@ using namespace std;
 
 
 char cwd[1000];
+int count_parameters;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -24,7 +38,10 @@ char cwd[1000];
 
 void directory_ch(char *args)
 {
-    char *c="/home";
+ 
+ 
+ chdir(args);
+  /*  char *c="/home";
    // char *d="/home/jeevseh";
 
     if(args[0]=='\0')
@@ -58,7 +75,7 @@ void directory_ch(char *args)
         jai[0]='\0';
         chdir(jai);
 
-    }*/
+    }
     else
     {
             char path[255];
@@ -74,8 +91,11 @@ void directory_ch(char *args)
             chdir(path);
 
     }
-
+*/
 }
+
+
+
 
 
 
@@ -83,12 +103,28 @@ void directory_ch(char *args)
 
 int jai(char * l,char **arg)
 {
+     count_parameters=0;
+    /*
+    char *tryy=l;
+
+    while(*tryy !='\0')
+    {
+        if(*tryy++ == '|')
+        {
+            parsing_pipe(l,arg);
+            return 0;
+        }
+    }
+    */
+    
     while(*l != '\0')
     {
         while(*l == ' ' || *l == '\t' || *l == '\n' )
         *l++='\0';
         
         *arg=l;
+        //printf("\t %s \n",*arg);
+        ++count_parameters;
         ++arg;
 
         while(*l != ' ' && *l != '\t' && *l != '\n' && *l != '\0')
@@ -103,6 +139,8 @@ return 0;
 
 void jaiexecute(char **argv)
 {
+    
+    
     pid_t pid;
     int status;
 
@@ -113,11 +151,33 @@ void jaiexecute(char **argv)
     }
     else if(pid == 0)
     {
-        if( execvp(*argv,argv) < 0)
-        {
-            printf("***Error: Command Not found\n");
-            exit(1);
-        }
+        
+        if(strcmp(argv[count_parameters-1],"&")==0)
+            {
+                argv[count_parameters-1]=NULL;
+
+                 if(execvp(*argv,argv) < 0)
+                    {
+                    printf("***Error: Command Not found\n");
+                    exit(1);
+                     }
+            
+            
+            
+            }
+    
+            if(execvp(*argv,argv)<0){
+
+
+               printf("***Error: Command Not found\n");
+                  exit(1);
+
+            }
+        //else( execvp(*argv,argv) < 0)
+        //{
+            ///printf("***Error: Command Not found\n");
+          //  exit(1);
+        //}
     }
     else{
        

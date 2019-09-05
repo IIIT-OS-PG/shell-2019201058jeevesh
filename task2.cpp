@@ -14,6 +14,7 @@ using namespace std;
 #include<list>
 
 list<string> history;
+//int count_parameters;
 
 
 void history_call()
@@ -23,6 +24,68 @@ void history_call()
   cout<<*it<<endl;
   cout<<*it<<endl;
 }
+
+
+
+
+
+
+char *pi_jai[5][5];
+void parsing_pipe(char **argv,int count_pipes)
+{
+
+  int j=0;
+  
+
+  int i=0;
+  int k=0;
+  while(argv[i]!=NULL)
+  {
+    
+    
+    if(strcmp(argv[i],"|")==0)
+    {
+     pi_jai[j][k]=NULL; 
+      ++j;k=0;++i;
+      continue;
+    }
+    pi_jai[j][k]=argv[i];
+    printf("%s",pi_jai[j][k]);
+  ++i;++k;
+  }
+  
+
+  int fd[count_pipes+1][2];
+  
+for(k=0;k<=count_pipes;k++)
+{
+if (pipe(fd[k]) < 0) 
+        exit(1); 
+
+}
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -52,8 +115,35 @@ int h=0;
         buff[i]=str[i];
         buff[i]='\0';
         
-        jai(buff, argv);                     
+        jai(buff, argv);    
+                     
+        int count_pipes=0;
+        for(int j=0;argv[j]!=NULL;j++)
+        {
+          if(*argv[j]=='|') ++count_pipes;
+        }
+        
+        if(count_pipes)
+        {
+          //cout<<"pipe"<<count_pipes;
+          parsing_pipe(argv,count_pipes);
+          continue;
+        }
+        
+        
+        
+        /*else
+        {
+          cout<<"no pipe";
+        }*/
+        
       
+      
+      //print_parameters(argv);
+
+/*      for(int i=0;i<count_parameters;i++)
+      printf("\t %s \n",*(argv+i));
+*/
      
      
      
