@@ -50,19 +50,94 @@ void parsing_pipe(char **argv,int count_pipes)
       continue;
     }
     pi_jai[j][k]=argv[i];
-    printf("%s",pi_jai[j][k]);
+    //printf("%s",pi_jai[j][k]);
   ++i;++k;
   }
   
 
-  int fd[count_pipes+1][2];
+  int fd[count_pipes][2];
   
-for(k=0;k<=count_pipes;k++)
+for(k=0;k<count_pipes;k++)
 {
 if (pipe(fd[k]) < 0) 
         exit(1); 
-
 }
+
+for(k=0;k<=count_pipes;k++)
+{
+  if(k==0)
+  {
+   int pid;
+   
+    if(( pid=fork())==0)
+    {
+    dup2(fd[0][1],1);
+    close(fd[0][1]);
+    close(fd[0][0]);
+    
+               // cout<<" loop 1"<<" ";
+                 if(execvp(*pi_jai[k],pi_jai[k]) < 0)
+                    {
+                    printf("***Error: Command Not found\n");
+                    exit(1);
+                     }
+                   //  cout<<" loop 1"<<" ";
+  
+    }
+  }
+  else if(k==count_pipes)
+  {
+    int pid;
+   if((pid=fork())==0)
+   {
+   
+    dup2(fd[k-1][0],0);
+    close(fd[k-1][0]);
+    close(fd[k-1][1]);
+  
+                    
+                    cout<<execvp(*pi_jai[k],pi_jai[k]);
+                    
+                    
+                    // cout<<" loop 2"<<" ";
+                    /* if(execvp(*pi_jai[k],pi_jai[k]) < 0)
+                    {
+                    printf("***Error: Command Not found\n");
+                    exit(1);
+                     }
+                    //cout<<" loop 2"<<" ";*/
+
+  
+  }
+  }
+  else
+  {
+
+    int pid;
+    if((pid=fork())==0)
+   {
+      dup2(fd[k][1],1);
+    dup2(fd[k-1][0],0);
+
+    close(fd[k-1][0]);
+    close(fd[k][1]);
+     
+     
+    
+       // cout<<" loop 3"<<" ";
+    
+                if(execvp(*pi_jai[k],pi_jai[k]) < 0)
+                {
+                printf("***Error: Command Not found\n");
+                exit(1);
+                 }
+
+         // cout<<" loop 3"<<" ";
+  }
+  
+}
+}
+
 
 
 
