@@ -30,10 +30,10 @@ void history_call()
 
 
 
-char *pi_jai[5][5];
+
 void parsing_pipe(char **argv,int count_pipes)
 {
-
+char *pi_jai[5][5];
   int j=0;
   
 
@@ -50,10 +50,12 @@ void parsing_pipe(char **argv,int count_pipes)
       continue;
     }
     pi_jai[j][k]=argv[i];
-    //printf("%s",pi_jai[j][k]);
+    
+  
+  // printf("%s\n",pi_jai[j][k]);
   ++i;++k;
   }
-  
+pi_jai[j][k]=NULL;  
 
   int fd[count_pipes][2];
   
@@ -75,15 +77,24 @@ for(k=0;k<=count_pipes;k++)
     close(fd[0][1]);
     close(fd[0][0]);
     
-               // cout<<" loop 1"<<" ";
+               cout<<" loop 1"<<" ";
                  if(execvp(*pi_jai[k],pi_jai[k]) < 0)
                     {
                     printf("***Error: Command Not found\n");
                     exit(1);
                      }
-                   //  cout<<" loop 1"<<" ";
+                     cout<<" loop 1"<<" ";
+                     close(fd[0][0]);
   
     }
+    else
+    {
+      wait(NULL);
+      close(fd[0][1]);
+    //close(fd[0][0]);
+     // exit(1);
+    }
+    
   }
   else if(k==count_pipes)
   {
@@ -92,23 +103,41 @@ for(k=0;k<=count_pipes;k++)
    {
    
     dup2(fd[k-1][0],0);
-    close(fd[k-1][0]);
+    close(fd[k-1][0]);//closed now
     close(fd[k-1][1]);
   
                     
-                    cout<<execvp(*pi_jai[k],pi_jai[k]);
+                    
+                    cout<<" loop 2"<<" ";
+                    
+                    if(execvp(*pi_jai[k],pi_jai[k])<0)
+                    {
+                      printf("***Error: Command Not found\n");
+                    exit(1);
+
+                    }
+                    exit(1);
                     
                     
                     // cout<<" loop 2"<<" ";
-                    /* if(execvp(*pi_jai[k],pi_jai[k]) < 0)
-                    {
-                    printf("***Error: Command Not found\n");
-                    exit(1);
-                     }
+                    // if(execvp(*pi_jai[k],pi_jai[k]) < 0)
+                    //{
+                    //printf("***Error: Command Not found\n");
+                    //exit(1);
+                     //}
                     //cout<<" loop 2"<<" ";*/
 
   
   }
+  else
+  {
+    wait(NULL);
+   //close(fd[k-1][0]); 
+    close(fd[k-1][1]);//closedow
+    //exit(1);
+      
+  }
+  
   }
   else
   {
@@ -119,12 +148,12 @@ for(k=0;k<=count_pipes;k++)
       dup2(fd[k][1],1);
     dup2(fd[k-1][0],0);
 
-    close(fd[k-1][0]);
+   close(fd[k-1][0]);
     close(fd[k][1]);
      
      
     
-       // cout<<" loop 3"<<" ";
+       cout<<" loop 3"<<" ";
     
                 if(execvp(*pi_jai[k],pi_jai[k]) < 0)
                 {
@@ -134,6 +163,15 @@ for(k=0;k<=count_pipes;k++)
 
          // cout<<" loop 3"<<" ";
   }
+  else
+  {
+    wait(NULL);
+    //close(fd[k-1][1]);//close(fd[k-1][0]);
+    close(fd[k][1]);
+   //exit(1);
+      
+  }
+  
   
 }
 }
