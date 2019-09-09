@@ -16,6 +16,7 @@
 #include<fcntl.h>
 #include<sys/types.h>
 using namespace std;
+int ret;
 
 
 char cwd[1000];
@@ -26,26 +27,30 @@ char *USER;
 char *PS1;
 char *HOME;
 char *PATH;
+
+
+// signal in case of ctrl +c
+void sigintHandler(int sig_num)
+{
+    signal(SIGINT, sigintHandler);
+    fflush(stdout);
+}
+char buffer[255];
+char bufferPath[200];
+char hostbuffer[100];
+
 void command_set()
 {
-//char *PS1;
 
-//char *HOME;
 struct  passwd *pwd;
 pwd=getpwuid(getuid());
 HOME=pwd->pw_dir;
 
 
 
-//char *PATH;
-
-//char *USER;
-char buffer[255];
 getlogin_r(buffer,255);
 USER=buffer;
 
-//char *HOSTNAME;
-char hostbuffer[100];
 gethostname(hostbuffer,sizeof(hostbuffer));
 HOSTNAME=hostbuffer;
 
@@ -62,7 +67,7 @@ void jairc()
 
 
 int fd=open("/home/jeevesh/Desktop/os_iiith/Assignment1/jairc.txt",O_RDONLY);
-char bufferPath[200];
+//char bufferPath[200];
 int countChar = read(fd, bufferPath, 200);
 bufferPath[countChar] = '\0';
 //printf(" eeee  %d  %s",fd,bufferPath);
@@ -70,11 +75,6 @@ close(fd);
 char mybuffer[200];
 int j=0;
 
-
-
-//printf("%lu\n",strlen(bufferPath));
-
-//string r=bufferPath.substr(5,92);
 
 for(int i=8;i<=countChar;i++,j++)
 {mybuffer[j]=bufferPath[i];
@@ -90,33 +90,13 @@ setenv("PATH",mybuffer,1);
 }
 
 
-
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+char temp[7]="/home";
 void directory_ch(char *args)
 {
- 
- 
+ char *c=temp;
+ if((strcmp(args,"~")==0)  || (strcmp(args,"~/")==0))
+chdir(c);
+else
  chdir(args);
   /*  char *c="/home";
    // char *d="/home/jeevseh";
@@ -173,26 +153,10 @@ void directory_ch(char *args)
 
 
 
-
-
-
-
-
 int jai(char * l,char **arg)
 {
      count_parameters=0;
-    /*
-    char *tryy=l;
-
-    while(*tryy !='\0')
-    {
-        if(*tryy++ == '|')
-        {
-            parsing_pipe(l,arg);
-            return 0;
-        }
-    }
-    */
+    
     
     while(*l != '\0')
     {
@@ -233,8 +197,9 @@ void jaiexecute(char **argv)
             {
                 argv[count_parameters-1]=NULL;
 
-                 if(execvp(*argv,argv) < 0)
+                 if((execvp(*argv,argv)) < 0)
                     {
+                        ret=-1;
                     printf("***Error: Command Not found\n");
                     exit(1);
                      }
@@ -243,9 +208,9 @@ void jaiexecute(char **argv)
             
             }
     
-            if(execvp(*argv,argv)<0){
+            if((execvp(*argv,argv))<0){
 
-
+                ret=-1;
                printf("***Error: Command Not found\n");
                   exit(1);
 
@@ -264,22 +229,11 @@ void jaiexecute(char **argv)
 
 
 
-
-
-
-
-
-
-
-
 void promptcall()         //To display on prompt
 {
     
     char buffer[255];
     getlogin_r(buffer,255);
-    
-    
-    
     
     
     char displayprompt[1001];
